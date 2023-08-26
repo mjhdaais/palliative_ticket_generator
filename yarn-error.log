@@ -1,0 +1,34 @@
+Arguments: 
+  /snap/node/7707/bin/node /snap/node/7707/bin/yarn.js add express nodemon africastalking body-parser
+
+PATH: 
+  /home/dev/.local/bin:/home/dev/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/dev/sdk/flutter/bin:~/usr/local/android-studio/bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  18.17.1
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: getaddrinfo EAI_AGAIN registry.yarnpkg.com
+      at GetAddrInfoReqWrap.onlookup [as oncomplete] (node:dns:108:26)
+
+npm manifest: 
+  {
+    "name": "palliative_ticket_generator",
+    "version": "1.0.0",
+    "description": "This project is a palliative foodstuff ticket generator designed to streamline the distribution of food essentials to those in need. The application facilitates the creation and management of food distribution tickets, making it easier to organize and allocate resources efficiently. With a user-friendly interface, it enables administrators to issue food tickets, track distribution progress, and ensure that essential supplies reach the intended recipients in a timely manner. By leveraging technology, the palliative foodstuff ticket generator contributes to improving the accessibility and effectiveness of food distribution efforts.",
+    "main": "index.js",
+    "author": "Wahab Capacity",
+    "license": "MIT"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
