@@ -1,169 +1,77 @@
-const express = require('express')
-const Ticket = require('./models/Ticket')
-const router = express.Router()
+const express = require('express');
+const Ticket = require('./models/Ticket');
+const Africastalking = require('africastalking');
+
+require("dotenv").config();
+
+const router = express.Router();
+const API_KEY = process.env.AT_SANDBOX_APIKEY;
+const USERNAME = process.env.AT_SANDBOX_USERNAME;
+const credentials = {
+    apiKey: API_KEY,
+    username: USERNAME,
+};
+const sms = Africastalking(credentials).SMS;
 
 router.get('/tickets', async (req, res) => {
-    const tickets = await Ticket.find()
-    res.send(tickets)
-})
+    try {
+        const tickets = await Ticket.find();
+        res.send(tickets);
+    } catch (error) {
+        res.status(500).send("Error fetching tickets");
+    }
+});
 
-// router.post('/tickets', async (req, res) => {
-//     const ticket = new Ticket({})
-//     await ticket.save()
-//     res.send(ticket)
-// })
+router.post('/', async (req, res) => {
+    const { text } = req.body;
+    let response = '';
+    let userData = {};
 
-// router.post('/', (req, res) => {
-//     const { sessionId, serviceCode, phoneNumber, text } = req.body;
-
-//     if (text === "") {
-//         // Prompt the user for their name
-//         response = `CON Please enter your fullname (first 3 letters, space, and rest of name):`;
-//     } else if (text.startsWith("CON")) {
-//         // User responded with their name
-//         const userInput = text.substring(4).trim(); // Remove "CON " from the response
-        
-//         if (/^[A-Za-z]{3}\s[A-Za-z\s]*$/.test(userInput)) {
-//             // Valid name format
-//             // const fullname = userInput;
-            
-//             // // Save the user's fullname to the database
-//             // const user = new User({
-//             //     phoneNumber: phoneNumber,
-//             //     fullname: fullname
-//             // });
-
-//             try {
-//                 // await user.save();
-//                 response = `END Thank you, ${fullname}! Your fullname has been saved.`;
-//             } catch (error) {
-//                 response = `END Sorry, there was an error saving your information.`;
-//             }
-//         } else {
-//             // Invalid name format
-//             response = `END Invalid name format. Please follow the pattern: First 3 letters, space, and rest of name.`;
-//         }
-//     } else {
-//         // Handle other cases or responses
-//         // ...
-//     }
-    
-//     res.set("Content-Type: text/plain")
-//     res.send(response)
-// })
-
-// router.post("/", async (req, res) => {
-//     const { sessionId, serviceCode, phoneNumber, text } = req.body;
-//     let response = "";
-//     let userData = {};
-
-//     if (text === "") {
-//         // Prompt the user for their fullname
-//         response = `CON Please enter your fullname (first 3 letters, space, and rest of name):`;
-//     } else if (text.startsWith("CON")) {
-//         // User responded with their name
-//         const userInput = text.substring(4).trim(); // Remove "CON " from the response
-        
-//         if (/^[A-Za-z]{3}\s[A-Za-z\s]*$/.test(userInput)) {
-//             // Valid name format
-//             userData.fullname = userInput;
-
-//             // Prompt for date of birth
-//             response = `CON Great, now please enter your date of birth (DD/MM/YYYY):`;
-//         } else {
-//             // Invalid name format
-//             response = `END Invalid name format. Please follow the pattern: First 3 letters, space, and rest of name.`;
-//         }
-//     } else if (text.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
-//         // User responded with date of birth
-//         const dob = text;
-
-//         if (/^\d{2}\/\d{2}\/\d{4}$/.test(dob)) {
-//             // Valid date of birth format
-//             userData.dateofbirth = dob;
-
-//             // Prompt for VIN
-//             response = `CON Please enter your Voter's Identity Number (6 digits):`;
-//         } else {
-//             // Invalid date of birth format
-//             response = `END Invalid date of birth format. Please use the format DD/MM/YYYY.`;
-//         }
-//     } else if (/^\d{6}$/.test(text)) {
-//         // User responded with VIN
-//         const vin = text;
-
-//         if (/^\d{6}$/.test(vin)) {
-//             // Valid VIN format
-//             userData.vin = vin;
-
-//             // Generate a random 5-digit token
-//             const token = generateToken();
-
-//             // Save the user's information to the database
-//             // const user = new User({
-//             //     phoneNumber: phoneNumber,
-//             //     fullname: userData.fullname,
-//             //     dateofbirth: userData.dateofbirth,
-//             //     vin: userData.vin,
-//             //     token: token
-//             // });
-
-//             try {
-//                 await user.save();
-//                 response = `END Thank you! Your information has been saved. Your unique token is ${token}. ${userData}`;
-//             } catch (error) {
-//                 response = `END Sorry, there was an error saving your information.`;
-//             }
-//         } else {
-//             // Invalid VIN format
-//             response = `END Invalid VIN format. Please use 6 digits.`;
-//         }
-//     } else {
-//         // Handle other cases or responses
-//         // ...
-//     }
-
-//     res.set("Content-Type: text/plain");
-//     res.send(response);
-// });
-
-router.post('/', (req, res) => {
-    const { sessionId, serviceCode, phoneNumber, text } = req.body
-    let response = ''
-    let userData = {}
-
-    console.log(req.body)
-
-    if (text === '') {
-        response = `CON Please enter your fullname:`
-        // userData.fullname = extractAfterLastAsterisk(text)
-        console.log(text)
+    if (textb === '') {
+        response = `CON Please enter your fullname:`;
 
     } else if (isValidNameFormat(text)) {
-        response = `CON Great, now please enter your date of birth (DD/MM/YYYY):`
-        userData.fullname = extractAfterLastAsterisk(text)
-        console.log(text, userData)
+        response = `CON Great, now please enter your date of birth (DD/MM/YYYY):`;
+        userData.fullname = extractAfterLastAsterisk(text);
 
     } else if (isValidDateFormat(extractAfterLastAsterisk(text))) {
-        response = `CON Please enter your Voter's Identity Number (6 digits):`
-        userData.dob = extractAfterLastAsterisk(text)
-        console.log(text, userData)
+        response = `CON Please enter your Voter's Identity Number (6 digits):`;
+        userData.dob = extractAfterLastAsterisk(text);
 
     } else if (isValidVinFormat(extractAfterLastAsterisk(text))) {
-        userData.vin = extractAfterLastAsterisk(text)
-        console.log(text, userData)
+        userData.vin = extractAfterLastAsterisk(text);
+        userData.token = generateToken();
 
-        userData.token = generateToken()
+        const ticket = new Ticket({
+            fullname: userData.fullname,
+            dateofbirth: userData.dob,
+            vin: userData.vin,
+            token: userData.token
+        });
 
-        response = `END Thank you! ${userData}`
+        try {
+            await ticket.save();
+            const options = {
+                to: ['+23409076222676'], // Update with the actual phone number
+                message: `Congrats! your palliative ticket number is: ${userData.token}`
+            };
 
+            sms.send(options)
+                .then(response => console.log(response))
+                .catch(error => console.log(error));
+
+            response = `END Thank you! You will receive an SMS with your palliative ticket number`;
+
+        } catch (error) {
+            response = `END Error while processing your request`;
+        }
     } else {
-        response = `END Invalid Input`
+        response = `END Invalid Input`;
     }
 
-    res.set("Content-Type: text/plain");
+    res.set("Content-Type", "text/plain");
     res.send(response);
-})
+});
 
 function isValidNameFormat(input) {
     return /^[A-Za-z]{3,}\s[A-Za-z\s]*$/.test(input);
@@ -173,9 +81,9 @@ function extractAfterLastAsterisk(inputString) {
     const lastIndex = inputString.lastIndexOf('*');
     if (lastIndex !== -1 && lastIndex < inputString.length - 1) {
         const substring = inputString.substring(lastIndex + 1);
-        return substring.toLowerCase(); // Convert the substring to lowercase
+        return substring.toLowerCase();
     }
-    return inputString.toLowerCase(); // Convert the whole string to lowercase
+    return inputString.toLowerCase();
 }
 
 function isValidDateFormat(input) {
@@ -186,10 +94,8 @@ function isValidVinFormat(input) {
     return /^\d{6}$/.test(input);
 }
 
-// Function to generate a random 5-digit token
 function generateToken() {
     return Math.floor(10000 + Math.random() * 90000);
 }
 
-
-module.exports = router
+module.exports = router;

@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "This project introduces a palliative ticket generator, specifically designed to streamline the distribution of vital resources to those in need. The platform simplifies the creation and management of palliative distribution, enhancing organization and resource allocation efficiency. By harnessing the power of Africa's Talking USSD and SMS technology, the palliative ticket generator significantly enhances the accessibility and effectiveness of distribution efforts. This innovation translates into faster distribution, reduced costs, and broader reach, ultimately benefitting administrators and recipients alike.",
   "main": "index.js",
-  "author": "WahabInsights (@wahabinsights)",
+  "author": "Wahab",
+  "repository": {
+    "url": "https://github.com/mjhdaais/palliative_ticket_generator"
+  },
   "license": "MIT",
   "dependencies": {
     "africastalking": "^0.6.2",
